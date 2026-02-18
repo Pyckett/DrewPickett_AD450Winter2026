@@ -36,7 +36,7 @@ def clean_income(df):
     i_clean_df['income'] = pd.to_numeric(
         i_clean_df['income'], 
         errors = 'coerce', 
-    ).astype('Int64')
+    ).astype('Int64') # convert the columns data type to int
     return i_clean_df
 
 def rename_columns(df):

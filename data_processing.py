@@ -12,6 +12,33 @@ def remove_fully_null_columns_rows(df):
     clean_df = df.dropna(axis = 1, how = "all")
     return clean_df
 
+def clean_and_fill_content_rating(df):
+    cr_clean_df = df.copy()
+    cr_clean_df['content_rating'] = cr_clean_df['content_rating'].fillna("Unrated")
+    cr_clean_df['content_rating'] = cr_clean_df['content_rating'].replace("Not Rated", "Unrated")
+    return cr_clean_df
+
+def clean_release_year(df):
+    ry_clean_df = df.copy()
+    ry_clean_df['release_year_coerce'] = pd.to_datetime(ry_clean_df['release_year'], errors = 'coerce')
+    ry_clean_df['release_year_mixed'] = pd.to_datetime(ry_clean_df['release_year'], errors = 'ignore')
+    return ry_clean_df
+
+def clean_income(df):
+    i_clean_df = df.copy()
+    i_clean_df['income'] = (
+        i_clean_df['income'].astype(str)
+        .str.replace('$', '')
+        .str.replace(',', '')
+        .str.replace('o', '0')
+        .str.strip()
+    )
+    i_clean_df['income'] = pd.to_numeric(
+        i_clean_df['income'], 
+        errors = 'coerce', 
+    ).astype('Int64')
+    return i_clean_df
+
 def rename_columns(df):
     rename_dict = {name : name.strip().lower().replace(':', '').replace(' ', '_') for name in df.columns}
     return df.rename(columns=rename_dict)
